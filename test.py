@@ -1,6 +1,3 @@
-import sys
-import os
-import time
 import pygame as pg
 import pygame.midi
 
@@ -70,7 +67,5 @@ def input_main(device_id=None):
     del i
     pygame.midi.quit()
 
-while True:
-  print_device_info()
-  time.sleep(5)
 
+print_device_info()
