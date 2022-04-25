@@ -1,0 +1,11 @@
+[Unit]
+Description=Practice Tracker
+
+[Service]
+WorkingDirectory=/home/pi/code/practicetracker/
+ExecStart=/usr/local/bin/pipenv run python tracker.py
+Restart=always
+
+[Install]
+WantedBy=default.target
+

@@ -1,0 +1,11 @@
+[Unit]
+Description=Practice Tracker Dashboard
+
+[Service]
+WorkingDirectory=/home/pi/code/practicetracker/
+ExecStart=/usr/local/bin/pipenv run flask run --host=0.0.0.0
+Restart=always
+
+[Install]
+WantedBy=default.target
+
