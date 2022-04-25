@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Piano Practice</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body class="bg-sky-100">
+<div class="bg-sky-900 py-5 px-3">
+    <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+        <div class="md:flex md:items-center md:justify-between">
+            <div class="flex-1 min-w-0">
+                <h2 class="text-2xl font-bold leading-7 text-white sm:text-3xl sm:truncate">Piano Practice</h2>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
+    <dl class="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-4">
+        <div class="px-4 py-5 bg-sky-500 shadow rounded-lg overflow-hidden sm:p-6 ">
+            <dt class="text-sm font-medium text-sky-100 truncate">Today</dt>
+            <dd class="mt-1 text-3xl font-semibold text-sky-100">{{ today }}</dd>
+        </div>
+
+        <div class="px-4 py-5 bg-white shadow rounded-lg overflow-hidden sm:p-6">
+            <dt class="text-sm font-medium text-gray-500 truncate">Last 7 Days</dt>
+            <dd class="mt-1 text-3xl font-semibold text-gray-900">{{ sum_7 }}</dd>
+        </div>
+
+        <div class="px-4 py-5 bg-white shadow rounded-lg overflow-hidden sm:p-6">
+            <dt class="text-sm font-medium text-gray-500 truncate">Daily Average</dt>
+            <dd class="mt-1 text-3xl font-semibold text-gray-900">{{ average }}</dd>
+        </div>
+
+        <div class="px-4 py-5 bg-white shadow rounded-lg overflow-hidden sm:p-6">
+            <dt class="text-sm font-medium text-gray-500 truncate">Days Played</dt>
+            <dd class="mt-1 text-3xl font-semibold text-gray-900">{{ days_played }}/7</dd>
+        </div>
+    </dl>
+    <div id="chart"></div>
+</div>
+
+<script>
+    var options = {
+        chart: {
+            type: 'area',
+            height: '100%'
+        },
+        dataLabels: {
+          enabled: false
+        },
+        series: [{
+            name: 'Minutes played',
+            data: {{ days_y }}
+        }],
+        xaxis: {
+            categories: {{ days_x|safe }},
+            type: 'datetime'
+        },
+        stroke: {
+            curve: 'smooth',
+        },
+
+        markers: {
+            size: 6,
+            colors: undefined,
+            strokeColors: '#fff',
+            strokeWidth: 2,
+            strokeOpacity: 0.9,
+            strokeDashArray: 0,
+            fillOpacity: 1,
+            discrete: [],
+            shape: "circle",
+            radius: 2,
+            offsetX: 0,
+            offsetY: 0,
+            onClick: undefined,
+            onDblClick: undefined,
+            showNullDataPoints: true,
+            hover: {
+                size: undefined,
+                sizeOffset: 3
+            }
+        }
+    }
+
+    var chart = new ApexCharts(document.querySelector("#chart"), options);
+
+    chart.render();
+</script>
+</body>
+</html>

@@ -1,18 +1,44 @@
-import pygame.midi
+import datetime
+import sqlite3
 import time
 
-def load_input():
-    pygame.init()
-    pygame.midi.init()
-    return pygame.midi.Input(3)
+import pygame.midi
 
-def log_playtime(playtime):
-    playtime = str(playtime)
-    with open("tracking.log", "a") as trackingfile:
-        trackingfile.write(playtime + "\n")
-    print(playtime)
+
+def output(message):
+    #print(message)
+    pass
+
+
+def load_input():
+    time.sleep(1)
+    output("trying to load")
+    pygame.init()
+    output("pygame.initalized")
+    pygame.midi.init()
+    output("pygame.midi.initalized")
+    input = pygame.midi.Input(3)
+    output("input 3 loaded " + str(input))
+
+    return input
+
+
+def log_playtime(started):
+    playtime = str(time.time() - started)
+    con = sqlite3.connect('practicetracker.db')
+    cur = con.cursor()
+
+    cur.execute("INSERT INTO practice (started, stopped, seconds) VALUES (?, ?, ?)",
+                (datetime.datetime.fromtimestamp(started).strftime("%Y-%m-%d %H:%M:%S"),
+                 datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+                 playtime))
+    con.commit()
+    con.close()
+    output(playtime)
+
 
 if __name__ == '__main__':
+    output("HELLO MOTO")
     pygame.init()
     i = None
     last_note_played = None
@@ -24,20 +50,23 @@ if __name__ == '__main__':
             if i.poll():
                 no_input_counter = 0
                 midi_events = i.read(1000)
+                output(midi_events)
                 for midi in midi_events:
                     midi_value = midi[0][1]
                     # Movement to the left
                     if midi_value > 0:
+                        output("note played: " + str(midi_value))
                         last_note_played = time.time()
                         if started is None:
                             started = time.time()
             else:
                 no_input_counter += 1
-                if no_input_counter == 5:
+                if no_input_counter == 200:
+                    output("NO INPUT")
+                    no_input_counter = 0
                     i = None
             if last_note_played is not None and started is not None and time.time() - last_note_played > 20:
-                played_for = time.time() - started
-                log_playtime(played_for)
+                log_playtime(started)
                 started = None
             time.sleep(0.1)
         else:
@@ -45,10 +74,10 @@ if __name__ == '__main__':
             try:
                 i = load_input()
             except Exception as e:
+                output(str(e))
                 if last_note_played is not None and started is not None:
-                    played_for = time.time() - started
-                    log_playtime(played_for)
+                    log_playtime(started)
                     started = None
 
                 pygame.midi.quit()
-                time.sleep(1)
+                time.sleep(0.1)
