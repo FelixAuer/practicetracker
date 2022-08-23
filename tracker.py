@@ -1,6 +1,7 @@
 import datetime
 import sqlite3
 import time
+import os
 
 import pygame.midi
 
@@ -17,10 +18,10 @@ def load_input():
     output("pygame.initalized")
     pygame.midi.init()
     output("pygame.midi.initalized")
-    input = pygame.midi.Input(3)
-    output("input 3 loaded " + str(input))
+    piano_input = pygame.midi.Input(int(os.getenv('PIANO_PORT')))
+    output("piano_input loaded " + str(piano_input))
 
-    return input
+    return piano_input
 
 
 def log_playtime(started):
