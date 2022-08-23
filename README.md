@@ -95,3 +95,8 @@ $ systemctl --user enable practicetracker_dashboard
 ```
 ### Connect to fryderyk.xyz
 Retrieve your auth token from fryderyk.xyz and put into your `.env` file as `FRYDERYK_AUTH_TOKEN`
+
+Add the following entry to your crontab:
+```
+*/5 * * * * cd /home/pi/code/practicetracker && /usr/local/bin/pipenv run python sync.py >/dev/null 2>&1
+```
